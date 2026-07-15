@@ -4,7 +4,7 @@
   const DEFAULT_INPUTS = {
     "margin-percent": "10",
     "fixed-margin": "2.000",
-    "marketplace-fee-percent": "33",
+    "marketplace-fee-percent": "44",
     "marketplace-fixed-fee": "1.600"
   };
   const ids = ["supplier-price", "margin-percent", "fixed-margin", "marketplace-fee-percent", "marketplace-fixed-fee"];
@@ -36,7 +36,7 @@
   [input["supplier-price"], input["fixed-margin"], input["marketplace-fixed-fee"]].forEach(element => element.addEventListener("input", formatCurrency));
   [input["margin-percent"], input["marketplace-fee-percent"]].forEach(element => element.addEventListener("input", formatPercentage));
   input["supplier-price"].addEventListener("click", () => { input["supplier-price"].value = ""; calculate(); });
-  document.getElementById("reset-button").addEventListener("click", () => { ids.forEach(id => input[id].value = "0"); calculate(); });
+  document.getElementById("reset-button").addEventListener("click", () => { ids.forEach(id => input[id].value = ""); calculate(); });
   copyButton.addEventListener("click", async () => { if (!latest) return; try { await navigator.clipboard.writeText(String(latest)); showToast("Harga jual berhasil disalin"); } catch { showToast("Tidak dapat menyalin harga"); } });
   function showToast(text) { toast.textContent = text; toast.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove("show"), 2200); }
   const themeToggle = document.getElementById("theme-toggle");
