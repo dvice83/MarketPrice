@@ -1,6 +1,12 @@
 (() => {
   "use strict";
   const CONFIG = { adminJakmall: 6600, rounding: 100 };
+  const DEFAULT_INPUTS = {
+    "margin-percent": "10",
+    "fixed-margin": "2.000",
+    "marketplace-fee-percent": "33",
+    "marketplace-fixed-fee": "1.600"
+  };
   const ids = ["supplier-price", "margin-percent", "fixed-margin", "marketplace-fee-percent", "marketplace-fixed-fee"];
   const input = Object.fromEntries(ids.map(id => [id, document.getElementById(id)]));
   const output = Object.fromEntries(["selling-price", "net-profit", "marketplace-fee", "pre-rounding-price", "margin-profit", "rounding-difference"].map(id => [id, document.getElementById(id)]));
@@ -29,12 +35,14 @@
   function formatPercentage(event) { event.target.value = event.target.value.replace(/[^0-9.,]/g, "").replace(",", "."); calculate(); }
   [input["supplier-price"], input["fixed-margin"], input["marketplace-fixed-fee"]].forEach(element => element.addEventListener("input", formatCurrency));
   [input["margin-percent"], input["marketplace-fee-percent"]].forEach(element => element.addEventListener("input", formatPercentage));
-  document.getElementById("reset-button").addEventListener("click", () => { ids.forEach(id => input[id].value = ""); calculate(); input["supplier-price"].focus(); });
+  input["supplier-price"].addEventListener("click", () => { input["supplier-price"].value = ""; calculate(); });
+  document.getElementById("reset-button").addEventListener("click", () => { ids.forEach(id => input[id].value = "0"); calculate(); });
   copyButton.addEventListener("click", async () => { if (!latest) return; try { await navigator.clipboard.writeText(String(latest)); showToast("Harga jual berhasil disalin"); } catch { showToast("Tidak dapat menyalin harga"); } });
   function showToast(text) { toast.textContent = text; toast.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove("show"), 2200); }
   const themeToggle = document.getElementById("theme-toggle");
   function applyTheme(theme) { document.documentElement.dataset.theme = theme; themeToggle.textContent = theme === "dark" ? "☀" : "☾"; localStorage.setItem("marketprice-theme", theme); }
   const savedTheme = localStorage.getItem("marketprice-theme"); applyTheme(savedTheme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+  Object.entries(DEFAULT_INPUTS).forEach(([id, value]) => { input[id].value = value; });
   themeToggle.addEventListener("click", () => applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js");
 })();
