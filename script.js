@@ -44,5 +44,8 @@
   const savedTheme = localStorage.getItem("marketprice-theme"); applyTheme(savedTheme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
   Object.entries(DEFAULT_INPUTS).forEach(([id, value]) => { input[id].value = value; });
   themeToggle.addEventListener("click", () => applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
-  if ("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js");
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js", { updateViaCache: "none" })
+      .then(registration => registration.update());
+  }
 })();
